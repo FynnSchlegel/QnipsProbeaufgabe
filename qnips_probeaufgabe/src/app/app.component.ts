@@ -68,7 +68,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
     this.idx = this.idx + 1;
 
-    console.log(this.dayContent);
     return this.dayContent;
   }
 
