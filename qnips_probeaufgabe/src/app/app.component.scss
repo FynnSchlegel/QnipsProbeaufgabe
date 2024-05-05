@@ -1,0 +1,32 @@
+body {
+    font-family: 'Arial', sans-serif;
+    width: 80%;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+td, th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+th, .category {
+    background-color: gray;
+    text-align: center;
+    font-weight: bold;
+}
+
+.bold {
+    font-weight: bold
+}
+
+tbody {
+    background-color: lightgray;
+}

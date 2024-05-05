@@ -1,0 +1,60 @@
+<body>
+  <h1>Qnips Essens Table</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>
+          KW {{dayOffer[0].CalenderWeek}}
+        </th>
+        @for (dates of dayOffer; track dates){
+        <th>
+          {{ dates.Day }} <br>
+          {{ dates.Date }}
+        </th>
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="category">
+          {{ rows[0].Name }}
+        </td>
+        @for (offer of dayOffer; track offer) {
+        <td>
+          {{ offer.Aktion1.Product }} <br>
+          {{ offer.Aktion1.Allergens }} <br>
+          <div class="bold">{{ offer.Aktion1.Price + "€" }}</div>
+        </td>
+        }
+      </tr>
+
+      <tr>
+        <td class="category">
+          {{ rows[1].Name }}
+        </td>
+        @for (offer of dayOffer; track offer) {
+        <td>
+          {{ offer.Aktion2.Product }} <br>
+          {{ offer.Aktion2.Allergens }} <br>
+          <div class="bold">{{ offer.Aktion2.Price + "€" }}</div>
+        </td>
+        }
+      </tr>
+
+      <tr>
+        <td class="category">
+          {{ rows[2].Name }}
+        </td>
+        @for (offer of dayOffer; track offer) {
+        <td>
+          {{ offer.Salatbar.Product }} <br>
+          {{ offer.Salatbar.Allergens }} <br>
+          <div class="bold">{{ offer.Salatbar.Price + "€" }}</div>
+        </td>
+        }
+      </tr>
+    </tbody>
+  </table>
+</body>
