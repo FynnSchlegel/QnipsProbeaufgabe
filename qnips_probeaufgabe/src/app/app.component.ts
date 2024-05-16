@@ -5,10 +5,11 @@ import { IAllergen } from './models/allergen.model';
 import { IApiResponse } from './models/apiResponse.model';
 import { IProduct } from './models/product.model';
 import { IRow } from './models/row.model';
-import { IDayOffer } from './models/dayOffer.model';
+import { IDates } from './models/dates';
 import { IDaysModel } from './models/days.model';
 import { IAktion } from './models/aktion.model';
-import { IAngebot } from './models/angebot.model';
+import { IOffer } from './models/offer.model';
+import { IRowName } from './models/rowName.model';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,10 @@ export class AppComponent implements OnInit {
   allergens: { [key: string]: IAllergen[] } = {};
   products: IProduct[] = [];
   rows: IRow[] = [];
-  dayOffer: IDayOffer[] = [];
-  Dates: IDaysModel[] = [
+  dates: IDates[] = [];
+  offers: IOffer[] = [];
+  rowNames: IRowName[] = [];
+  DatesModel: IDaysModel[] = [
     { Name: 'Montag', Date: "" },
     { Name: 'Dienstag', Date: "" },
     { Name: 'Mittwoch', Date: "" },
@@ -52,31 +55,35 @@ export class AppComponent implements OnInit {
   }
 
   private createDayOffer() {
-    for (let i = 0; i < this.Dates.length; i++) {
-      this.dayOffer[i] = {
+    for (let i = 0; i < this.DatesModel.length; i++) {
+      this.dates[i] = {
         CalenderWeek: this.getCalenderWeek(this.currentDate),
-        Day: this.Dates[i].Name,
-        Date: this.Dates[i].Date,
+        Day: this.DatesModel[i].Name,
+        Date: this.DatesModel[i].Date,
         //Rows 
         //Tage bis sonntag
-        //
         //Beliebig viele und belibige namen
-        Angebot: this.getAngebot(i)
-        
       };
-    console.log(this.dayOffer[i].Angebot);
+
+      const newRow: IRowName[] = [{ RowName: this.rows[i].Name }];
+      this.rowNames.push(...newRow);
+      const newAngebot = this.getAngebot();
+      this.offers.push(...newAngebot);
     }
   }
 
-  private getAngebot(i: number) {
-    let Angebot: IAngebot[] = [];
+  private getAngebot() {
+    let Angebot: IOffer[] = [];
     for (let y = 0; y < this.rows.length; y++) {
-      let angebotItem: IAngebot = {
-        RowName: this.rows[y].Name,
-        Aktion: this.getEntity(y, i)
+      for (let i = 0; i < this.DatesModel.length; i++) {
+      let angebotItem: IOffer = {
+        RowNumber: y,
+        Aktion: [this.getEntity(y, i)]
       };
         Angebot.push(angebotItem);
+        console.log(Angebot);
     }
+  }
     return Angebot;
 }
 
@@ -89,6 +96,12 @@ export class AppComponent implements OnInit {
     const firstProduct = this.rows[rowNumber].Days[i].ProductIds[0].ProductId;
     if (firstProduct && this.products[firstProduct]) {
       productNames = this.products[firstProduct].Name
+    } else {
+      return {
+        Product: '',
+        Allergens: '',
+        Price: ''
+    };
     }
 
     this.products[firstProduct].AllergenIds.forEach((element: string) => {
@@ -128,10 +141,10 @@ export class AppComponent implements OnInit {
 
     startDateOfWeek.setDate(today.getDate() - (dayOfWeek === 1 ? 1 : dayOfWeek - 1));
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 7; i++) {
       const currentDate = new Date(startDateOfWeek);
       currentDate.setDate(startDateOfWeek.getDate() + i);
-      this.Dates[i].Date = currentDate.toLocaleDateString('de-DE');
+      this.DatesModel[i].Date = currentDate.toLocaleDateString('de-DE');
     }
 }
 

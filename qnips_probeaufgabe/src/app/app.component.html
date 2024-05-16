@@ -5,9 +5,9 @@
     <thead>
       <tr>
         <th>
-          KW {{dayOffer[0].CalenderWeek}}
+          KW {{dates[0].CalenderWeek}}
         </th>
-        @for (dates of dayOffer; track dates){
+        @for (dates of dates; track dates){
         <th>
           {{ dates.Day }} <br>
           {{ dates.Date }}
@@ -17,21 +17,27 @@
     </thead>
 
     <tbody>
-      @for (offer of dayOffer; track offer) {
-
+      @for (rowName of rowNames; track rowName) {
       <tr>
-        @for (angebot of offer.Angebot; track angebot) {
         <td class="category">
-          {{ angebot.RowName }}
+          {{ rowName.RowName }}
         </td>
-        <td>
-          {{ angebot.Aktion.Product }} <br>
-          {{ angebot.Aktion.Allergens }} <br>
-          <div class="bold">{{ angebot.Aktion.Price + "€" }}</div>
-        </td>
-        }
       </tr>
       }
+      <tr>
+
+        @for (offer of offers; track offer) {
+          @for (aktion of offer.Aktion; track aktion) {
+
+        <td>
+          {{ aktion.Product }} <br>
+          {{ aktion.Allergens }} <br>
+          <div class="bold">{{ aktion.Price + "€" }}</div>
+        </td>
+        }}
+      </tr>
+
+
       <!-- <tr>
         <td class="category">
           {{ rows[1].Name }}
