@@ -8,6 +8,7 @@ import { IRow } from './models/row.model';
 import { IDayOffer } from './models/dayOffer.model';
 import { IDaysModel } from './models/days.model';
 import { IAktion } from './models/aktion.model';
+import { IAngebot } from './models/angebot.model';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,9 @@ export class AppComponent implements OnInit {
     { Name: 'Dienstag', Date: "" },
     { Name: 'Mittwoch', Date: "" },
     { Name: 'Donnerstag', Date: "" },
-    { Name: 'Freitag', Date: "" }
+    { Name: 'Freitag', Date: "" },
+    { Name: 'Samstag', Date: "" },
+    { Name: 'Sonntag', Date: "" }
   ];
   currentDate = new Date();
 
@@ -54,12 +57,28 @@ export class AppComponent implements OnInit {
         CalenderWeek: this.getCalenderWeek(this.currentDate),
         Day: this.Dates[i].Name,
         Date: this.Dates[i].Date,
-        Aktion1: this.getEntity(0, i),
-        Aktion2: this.getEntity(1, i),
-        Salatbar: this.getEntity(2, i),
+        //Rows 
+        //Tage bis sonntag
+        //
+        //Beliebig viele und belibige namen
+        Angebot: this.getAngebot(i)
+        
       };
+    console.log(this.dayOffer[i].Angebot);
     }
   }
+
+  private getAngebot(i: number) {
+    let Angebot: IAngebot[] = [];
+    for (let y = 0; y < this.rows.length; y++) {
+      let angebotItem: IAngebot = {
+        RowName: this.rows[y].Name,
+        Aktion: this.getEntity(y, i)
+      };
+        Angebot.push(angebotItem);
+    }
+    return Angebot;
+}
 
   private getEntity(rowNumber: number, i: number): IAktion {
     let productNames: string = '';

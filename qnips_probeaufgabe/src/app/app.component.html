@@ -17,20 +17,22 @@
     </thead>
 
     <tbody>
+      @for (offer of dayOffer; track offer) {
+
       <tr>
+        @for (angebot of offer.Angebot; track angebot) {
         <td class="category">
-          {{ rows[0].Name }}
+          {{ angebot.RowName }}
         </td>
-        @for (offer of dayOffer; track offer) {
         <td>
-          {{ offer.Aktion1.Product }} <br>
-          {{ offer.Aktion1.Allergens }} <br>
-          <div class="bold">{{ offer.Aktion1.Price + "€" }}</div>
+          {{ angebot.Aktion.Product }} <br>
+          {{ angebot.Aktion.Allergens }} <br>
+          <div class="bold">{{ angebot.Aktion.Price + "€" }}</div>
         </td>
         }
       </tr>
-
-      <tr>
+      }
+      <!-- <tr>
         <td class="category">
           {{ rows[1].Name }}
         </td>
@@ -54,7 +56,7 @@
           <div class="bold">{{ offer.Salatbar.Price + "€" }}</div>
         </td>
         }
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 </body>

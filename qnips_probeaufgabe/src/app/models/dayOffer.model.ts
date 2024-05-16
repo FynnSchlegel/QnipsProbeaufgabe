@@ -1,10 +1,8 @@
-import { IAktion } from "./aktion.model";
+import { IAngebot } from "./angebot.model";
 
 export interface IDayOffer {
     CalenderWeek: number;
     Day: string;
     Date: string;
-    Aktion1: IAktion;
-    Aktion2: IAktion;
-    Salatbar: IAktion
+    Angebot: IAngebot[];
 }

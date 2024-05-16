@@ -15,6 +15,7 @@ export class ApiService {
       })
     };
     
-    return this.http.get<IApiResponse>('https://my.qnips.io/dbapi/ha', httpOptions);
+    //return this.http.get<IApiResponse>('https://my.qnips.io/dbapi/ha', httpOptions);
+    return this.http.get<IApiResponse>('https://myprelive.qnips.com/dbapi/ha', httpOptions);
   }
 }
