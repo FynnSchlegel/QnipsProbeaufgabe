@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApiService } from './api/apiService';
 import { IAllergen } from './models/allergen.model';
@@ -8,8 +8,6 @@ import { IRow } from './models/row.model';
 import { IDates } from './models/dates';
 import { IDaysModel } from './models/days.model';
 import { IAktion } from './models/aktion.model';
-import { IOffer } from './models/offer.model';
-import { IRowName } from './models/rowName.model';
 
 @Component({
   selector: 'app-root',
@@ -20,21 +18,22 @@ import { IRowName } from './models/rowName.model';
   styleUrl: './app.component.scss'
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   allergens: { [key: string]: IAllergen[] } = {};
   products: IProduct[] = [];
   rows: IRow[] = [];
   dates: IDates[] = [];
-  offers: IOffer[] = [];
-  rowNames: IRowName[] = [];
+  dayContent: IAktion[] = [];
+  maxFields: number = 0;
+  idx: number = 0;
   DatesModel: IDaysModel[] = [
-    { Name: 'Montag', Date: "" },
-    { Name: 'Dienstag', Date: "" },
-    { Name: 'Mittwoch', Date: "" },
-    { Name: 'Donnerstag', Date: "" },
-    { Name: 'Freitag', Date: "" },
-    { Name: 'Samstag', Date: "" },
-    { Name: 'Sonntag', Date: "" }
+    { Weekday: 0, Name: 'Montag', Date: "" },
+    { Weekday: 1, Name: 'Dienstag', Date: "" },
+    { Weekday: 2, Name: 'Mittwoch', Date: "" },
+    { Weekday: 3, Name: 'Donnerstag', Date: "" },
+    { Weekday: 4, Name: 'Freitag', Date: "" },
+    { Weekday: 5, Name: 'Samstag', Date: "" },
+    { Weekday: 6, Name: 'Sonntag', Date: "" }
   ];
   currentDate = new Date();
 
@@ -44,56 +43,52 @@ export class AppComponent implements OnInit {
     await this.getData();
   }
 
+  ngAfterViewInit() {
+    this.dates = [];
+  }
+
   private async getData() {
     this.apiService.get().subscribe((data: IApiResponse) => {
       this.allergens = data.Allergens;
       this.products = data.Products;
       this.rows = data.Rows;
+      this.maxFields = this.rows.length * this.DatesModel.length;
       this.getDatesOfThisWeek()
       this.createDayOffer();
     });
   }
+
+  getDayContent(weekday: number, row: IRow) {
+    this.dayContent = [];
+
+    row.Days.find((d) => d.Weekday == weekday)?.ProductIds.forEach(element => {
+      if (element) {
+        this.dayContent.push(this.getEntity(element.ProductId));
+      }
+    });
+    this.idx = this.idx + 1;
+
+    console.log(this.dayContent);
+    return this.dayContent;
+  }
+
 
   private createDayOffer() {
     for (let i = 0; i < this.DatesModel.length; i++) {
       this.dates[i] = {
         CalenderWeek: this.getCalenderWeek(this.currentDate),
         Day: this.DatesModel[i].Name,
-        Date: this.DatesModel[i].Date,
-        //Rows 
-        //Tage bis sonntag
-        //Beliebig viele und belibige namen
+        Date: this.DatesModel[i].Date
       };
-
-      const newRow: IRowName[] = [{ RowName: this.rows[i].Name }];
-      this.rowNames.push(...newRow);
-      const newAngebot = this.getAngebot();
-      this.offers.push(...newAngebot);
     }
   }
 
-  private getAngebot() {
-    let Angebot: IOffer[] = [];
-    for (let y = 0; y < this.rows.length; y++) {
-      for (let i = 0; i < this.DatesModel.length; i++) {
-      let angebotItem: IOffer = {
-        RowNumber: y,
-        Aktion: [this.getEntity(y, i)]
-      };
-        Angebot.push(angebotItem);
-        console.log(Angebot);
-    }
-  }
-    return Angebot;
-}
-
-  private getEntity(rowNumber: number, i: number): IAktion {
+  private getEntity(firstProduct: any): IAktion {
     let productNames: string = '';
     let allergens: string = '';
     let allergenValues;
     let price: string;
 
-    const firstProduct = this.rows[rowNumber].Days[i].ProductIds[0].ProductId;
     if (firstProduct && this.products[firstProduct]) {
       productNames = this.products[firstProduct].Name
     } else {
@@ -101,7 +96,7 @@ export class AppComponent implements OnInit {
         Product: '',
         Allergens: '',
         Price: ''
-    };
+      };
     }
 
     this.products[firstProduct].AllergenIds.forEach((element: string) => {
@@ -146,7 +141,7 @@ export class AppComponent implements OnInit {
       currentDate.setDate(startDateOfWeek.getDate() + i);
       this.DatesModel[i].Date = currentDate.toLocaleDateString('de-DE');
     }
-}
+  }
 
   getCalenderWeek(inputDate: any) {
     const currentDate: any =
@@ -163,5 +158,5 @@ export class AppComponent implements OnInit {
     return (currentDate < nextMonday) ? 52 :
       (currentDate > nextMonday ? Math.ceil(
         (currentDate - nextMonday) / (24 * 3600 * 1000) / 7) : 1);
-}
+  }
 }

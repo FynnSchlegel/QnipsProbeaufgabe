@@ -7,62 +7,42 @@
         <th>
           KW {{dates[0].CalenderWeek}}
         </th>
-        @for (dates of dates; track dates){
+        @for (date of dates; track dates){
         <th>
-          {{ dates.Day }} <br>
-          {{ dates.Date }}
+          {{ date.Day }} <br>
+          {{ date.Date }}
         </th>
         }
       </tr>
     </thead>
 
     <tbody>
-      @for (rowName of rowNames; track rowName) {
+      @for (row of rows; track row) {
       <tr>
         <td class="category">
-          {{ rowName.RowName }}
+          {{ row.Name }}
         </td>
+        @for (dateModel of DatesModel; track dateModel){
+
+        @if (maxFields > idx) {
+
+        @if (getDayContent(dateModel.Weekday, row) != null) {
+
+        <td>
+          @for (content of dayContent; track content) {
+          <div>
+            {{ content.Product }} <br>
+            {{ content.Allergens }} <br>
+            <div class="bold">{{ content.Price + "€" }}</div>
+          </div>
+          <br>
+          }
+        </td>
+        }
+        }
+        }
       </tr>
       }
-      <tr>
-
-        @for (offer of offers; track offer) {
-          @for (aktion of offer.Aktion; track aktion) {
-
-        <td>
-          {{ aktion.Product }} <br>
-          {{ aktion.Allergens }} <br>
-          <div class="bold">{{ aktion.Price + "€" }}</div>
-        </td>
-        }}
-      </tr>
-
-
-      <!-- <tr>
-        <td class="category">
-          {{ rows[1].Name }}
-        </td>
-        @for (offer of dayOffer; track offer) {
-        <td>
-          {{ offer.Aktion2.Product }} <br>
-          {{ offer.Aktion2.Allergens }} <br>
-          <div class="bold">{{ offer.Aktion2.Price + "€" }}</div>
-        </td>
-        }
-      </tr>
-
-      <tr>
-        <td class="category">
-          {{ rows[2].Name }}
-        </td>
-        @for (offer of dayOffer; track offer) {
-        <td>
-          {{ offer.Salatbar.Product }} <br>
-          {{ offer.Salatbar.Allergens }} <br>
-          <div class="bold">{{ offer.Salatbar.Price + "€" }}</div>
-        </td>
-        }
-      </tr> -->
     </tbody>
   </table>
 </body>
